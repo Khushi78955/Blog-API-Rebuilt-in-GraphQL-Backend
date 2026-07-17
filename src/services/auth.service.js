@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt"
+import jwt from "jsonwebtoken";
 
 import { findUserByEmail, createUser, updateRefreshToken, clearRefreshToken} from "../repositories/auth.repository.js"
 import { generateAccessToken, generateRefreshToken } from "../utils/token.js"

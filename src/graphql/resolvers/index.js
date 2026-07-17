@@ -1,6 +1,6 @@
-import { getAllUsers, getUserById } from "../../repositories/user.repository.js"
+import { getAllUsers, getUserById, getUserByAuthorId } from "../../repositories/user.repository.js"
 import { getAllPosts, getPostById } from "../../repositories/post.repository.js";
-import { getAllTags } from "../../repositories/tag.repository.js";
+import { getAllTags, getTagsByPostId } from "../../repositories/tag.repository.js";
 import { authResolvers } from "./auth.resolver.js";
 
 export const resolvers = {
@@ -13,5 +13,13 @@ export const resolvers = {
     },  
     Mutation: {
         ...authResolvers.Mutation
-    }
+    },
+    Post: {
+        author: async (parent) => {
+            return await getUserByAuthorId(parent.authorId);
+        },
+        tags: async (parent) => {
+            return await getTagsByPostId(parent.id);
+        },
+    },
 }
