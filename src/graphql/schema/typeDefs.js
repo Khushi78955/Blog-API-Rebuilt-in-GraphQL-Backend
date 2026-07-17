@@ -26,7 +26,8 @@ export const typeDefs = gql`
     }
 
     type AuthPayload {
-        token: String!
+        accessToken: String!
+        refreshToken: String!
         user: User!
     }
     type Query {
