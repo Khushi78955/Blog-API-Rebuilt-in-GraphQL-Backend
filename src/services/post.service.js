@@ -1,9 +1,10 @@
 import { createPost, getPostAuthor, updatePost, deletePost } from "../repositories/post.repository.js";
 import { validateTitle, validateContent} from "../utils/validation.js";
+import { unauthenticatedError, forbiddenError, notFoundError } from "../utils/errors.js";
 
 export async function createNewPost(title, content, user) {
     if (!user) {
-        throw new Error("Unauthorized");
+        unauthenticatedError();
     }
 
     validateTitle(title);
@@ -25,7 +26,7 @@ export async function createNewPost(title, content, user) {
 
 export async function updateExistingPost(postId, title, content, user){
     if(!user){
-        throw new Error("Unauthorized");
+        unauthenticatedError();
     }
     if(title){
         validateTitle(title);
@@ -35,10 +36,10 @@ export async function updateExistingPost(postId, title, content, user){
     }
     const authorId = await getPostAuthor(postId);
     if(authorId === null){
-        throw new Error("Post not found");
+        notFoundError("Post not found");
     }
     if(authorId !== user.id){
-        throw new Error("Forbidden");
+        forbiddenError();
     }
     return await updatePost(postId, title, content)
 }
@@ -46,14 +47,14 @@ export async function updateExistingPost(postId, title, content, user){
 
 export async function deleteExistingPost(postId, user){
     if(!user){
-        throw new Error("Unauthorized");
+        unauthenticatedError();
     }
     const authorId = await getPostAuthor(postId);
     if(authorId === null){
-        throw new Error("Post not found");
+        notFoundError("Post not found");
     }
     if(authorId !== user.id){
-        throw new Error("Forbidden");
+        forbiddenError();
     }
     return await deletePost(postId);
 }
