@@ -48,5 +48,6 @@ export async function clearRefreshToken(userId) {
         `,
         [userId]
     )
-    
 }
+
+
