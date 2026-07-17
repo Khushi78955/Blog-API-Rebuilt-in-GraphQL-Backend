@@ -1,7 +1,7 @@
 import passport from "passport";
 
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
-import { findUserByGoogleId, createGoogleUser } from "../repositories/auth.repository.js";
+import { findUserByGoogleId, createGoogleUser, findUserByGitHubId, createGitHubUser } from "../repositories/auth.repository.js";
 
 import { Strategy as GitHubStrategy } from "passport-github2";
 
@@ -17,7 +17,7 @@ passport.use(new GoogleStrategy(
             if(!user){
                 user = await createGoogleUser(
                     profile.displayName,
-                    profile.emails[0].value,
+                    profile.emails?.[0]?.value || "",
                     profile.id
                 )
             }
@@ -47,9 +47,9 @@ passport.use(new GitHubStrategy(
     },
     async (accessToken, refreshToken, profile, done) => {
         try {
-            let user = await findUserByGoogleId(profile.id);
+            let user = await findUserByGitHubId(profile.id);
             if (!user) {
-                user = await createGoogleUser(
+                user = await createGitHubUser(
                     profile.username,
                     profile.emails?.[0]?.value || "",
                     profile.id

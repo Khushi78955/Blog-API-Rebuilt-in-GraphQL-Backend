@@ -78,3 +78,31 @@ export async function createGoogleUser(username, email, googleId){
 
 }
 
+
+
+export async function findUserByGitHubId(githubId) {
+    const result = await pool.query(
+        `
+        SELECT *
+        FROM users
+        WHERE github_id = $1;
+        `,
+        [githubId]
+    );
+
+    return result.rows[0] || null;
+}
+
+export async function createGitHubUser(username, email, githubId) {
+    const result = await pool.query(
+        `
+        INSERT INTO users
+        (username, email, password, github_id)
+        VALUES ($1, $2, '', $3)
+        RETURNING *;
+        `,
+        [username, email, githubId]
+    );
+
+    return result.rows[0];
+}
