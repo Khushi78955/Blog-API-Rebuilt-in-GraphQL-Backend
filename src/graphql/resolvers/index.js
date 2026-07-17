@@ -1,10 +1,9 @@
+import { getAllUsers } from "../../repositories/user.repository.js"
+
 export const resolvers = {
     Query: {
-        user: () => ({
-            id: "1",
-            username: "Khushi",
-            email: "heyitskhushi26@gmail.com",
-            createdAt: new Date().toISOString()
-        })
+        users: async () => {
+            return await getAllUsers();
+        }
     }
 }
