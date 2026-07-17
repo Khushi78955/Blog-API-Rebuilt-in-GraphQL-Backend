@@ -3,6 +3,7 @@ import { getAllPosts, getPostById } from "../../repositories/post.repository.js"
 import { getAllTags, getTagsByPostId } from "../../repositories/tag.repository.js";
 import { authResolvers } from "./auth.resolver.js";
 
+
 export const resolvers = {
     Query: {
         users: async () => await getAllUsers(),
@@ -15,8 +16,8 @@ export const resolvers = {
         ...authResolvers.Mutation
     },
     Post: {
-        author: async (parent) => {
-            return await getUserByAuthorId(parent.authorId);
+        author: async (parent, _, context) => {
+            return await context.userLoader.load(parent.authorId);
         },
         tags: async (parent) => {
             return await getTagsByPostId(parent.id);

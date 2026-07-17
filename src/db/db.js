@@ -21,5 +21,4 @@ export async function connectDB() {
         console.error(error);
         process.exit(1);
     }
-    
 }

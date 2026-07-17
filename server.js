@@ -10,6 +10,8 @@ import { typeDefs } from "./src/graphql/schema/typeDefs.js";
 import { resolvers } from "./src/graphql/resolvers/index.js";
 import {connectDB} from "./src/db/db.js"
 
+import { createUserLoader } from "./src/loaders/user.loader.js";
+
 const app = express();
 
 const server = new ApolloServer({
@@ -19,7 +21,16 @@ const server = new ApolloServer({
 
 await server.start();
 
-app.use("/graphql", cors(), express.json(), expressMiddleware(server));
+app.use(
+    "/graphql",
+    cors(),
+    express.json(),
+    expressMiddleware(server, {
+        context: async () => ({
+            userLoader: createUserLoader(),
+        }),
+    })
+);
 
 const PORT = process.env.PORT || 4000;
 
