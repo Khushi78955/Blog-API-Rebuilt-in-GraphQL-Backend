@@ -1,4 +1,4 @@
-import {register, login} from "../../services/auth.service.js"
+import {register, login, refresh, logout} from "../../services/auth.service.js"
 
 export const authResolvers = {
     Mutation: {
@@ -7,6 +7,12 @@ export const authResolvers = {
         },
         login: async (_, {email, password}) => {
             return await login(email, password)
-        }
+        },
+        refreshToken: async (_, { refreshToken }) => {
+            return await refresh(refreshToken);
+        },
+        logout: async (_, { refreshToken }) => {
+            return await logout(refreshToken);
+        },
     }
 }

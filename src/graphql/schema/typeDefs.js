@@ -30,6 +30,7 @@ export const typeDefs = gql`
         refreshToken: String!
         user: User!
     }
+
     type Query {
         users: [User!]!
         user(id: ID!): User
@@ -39,7 +40,6 @@ export const typeDefs = gql`
 
         tags: [Tag!]!
     }
-
 
     type Mutation {
         register(
@@ -53,6 +53,10 @@ export const typeDefs = gql`
             password: String!
         ): AuthPayload!
 
+        refreshToken(
+            refreshToken: String!
+        ): AuthPayload!
+
         createPost(
             title: String!
             content: String!
@@ -64,9 +68,14 @@ export const typeDefs = gql`
             content: String
         ): Post!
 
+        logout(
+            refreshToken: String!
+        ): Boolean!
+
         deletePost(id: ID!): Boolean!
         createTag(name: String!): Tag!
     }
+
 `
 
 

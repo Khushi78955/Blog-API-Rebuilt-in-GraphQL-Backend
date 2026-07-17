@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt"
 
-import { findUserByEmail, createUser, updateRefreshToken} from "../repositories/auth.repository.js"
+import { findUserByEmail, createUser, updateRefreshToken, clearRefreshToken} from "../repositories/auth.repository.js"
 import { generateAccessToken, generateRefreshToken } from "../utils/token.js"
 
 export async function register(username, email, password){
@@ -61,4 +61,66 @@ export async function login(email, password) {
             createdAt: user.created_at
         }
     }
+}
+
+
+
+
+export async function refresh(refreshToken){
+    let payload;
+    try{
+        payload = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+    } catch {
+        throw new Error("Invalid refresh token");
+    }
+
+    const user = await findUserByEmail(payload.email);
+    if(!user){
+        throw new Error("User not found");
+    }
+
+    const isValidRefreshToken = await bcrypt.compare(refreshToken, user.hashed_refresh_token);
+    if(!isValidRefreshToken){
+        throw new Error("Invalid refresh token");
+    }
+
+    const newAccessToken = generateAccessToken(user);
+    const newRefreshToken = generateRefreshToken(user);
+    const hashedRefreshToken = await bcrypt.hash(newRefreshToken, 10);
+    await updateRefreshToken(user.id, hashedRefreshToken);
+
+    return {
+        accessToken: newAccessToken,
+        refreshToken: newRefreshToken,
+        user: {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+            createdAt: user.created_at,
+        },
+    };
+}
+
+
+
+export async function logout(refreshToken){
+    let payload;
+    try{
+        payload = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET)
+    } catch {
+        throw new Error("Invalid refresh token");
+    }
+
+    const user = await findUserByEmail(payload.email);
+    if(!user){
+        throw new Error("User not found");
+    }
+
+    const isValidRefreshToken = await bcrypt.compare(refreshToken, user.hashed_refresh_token);
+    if(!isValidRefreshToken){
+        throw new Error("Invalid refresh token");
+    }
+
+    await clearRefreshToken(user.id);
+    return true;
 }

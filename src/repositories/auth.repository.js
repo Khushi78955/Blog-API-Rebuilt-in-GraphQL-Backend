@@ -37,3 +37,16 @@ export async function updateRefreshToken(userId, hashedRefreshToken) {
     )
 }
 
+
+
+export async function clearRefreshToken(userId) {
+    await pool.query(
+        `
+        UPDATE users
+        SET hashed_refresh_token = NULL
+        WHERE id = $1;
+        `,
+        [userId]
+    )
+    
+}
