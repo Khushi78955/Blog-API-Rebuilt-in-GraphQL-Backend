@@ -5,11 +5,67 @@ export const typeDefs = gql`
         id: ID!
         username: String!
         email: String!
+        createdAt: String!
+    }
+
+    type Tag {
+        id: ID!
+        name: String!
+    }
+
+    type Post {
+        id: ID!
+        title: String!
+        content: String!
+        slug: String!
+        createdAt: String!
+        updatedAt: String!
+
+        author: User!
+        tags: [Tag!]!
+    }
+
+    type AuthPayload {
+        token: String!
+        user: User!
     }
     type Query {
-        hello: String
-        user: User
+        users: [User!]!
+        user(id: ID!): User
+
+        posts: [Post!]!
+        post(id: ID!): Post
+
+        tags: [Tag!]!
     }
 
 
+    type Mutation {
+        register(
+            username: String!
+            email: String!
+            password: String!
+        ): AuthPayload!
+
+        login(
+            email: String!
+            password: String!
+        ): AuthPayload!
+
+        createPost(
+            title: String!
+            content: String!
+        ): Post!
+
+        updatePost(
+            id: ID!
+            title: String
+            content: String
+        ): Post!
+
+        deletePost(id: ID!): Boolean!
+        createTag(name: String!): Tag!
+    }
 `
+
+
