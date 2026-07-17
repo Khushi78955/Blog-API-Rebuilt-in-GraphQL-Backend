@@ -1,5 +1,6 @@
 import {register, login, refresh, logout} from "../../services/auth.service.js"
 
+
 export const authResolvers = {
     Mutation: {
         register: async (_, { username, email, password }) => {
@@ -16,3 +17,4 @@ export const authResolvers = {
         },
     }
 }
+

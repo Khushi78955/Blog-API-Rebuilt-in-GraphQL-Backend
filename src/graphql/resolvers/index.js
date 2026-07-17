@@ -2,7 +2,7 @@ import { getAllUsers, getUserById, getUserByAuthorId } from "../../repositories/
 import { getAllPosts, getPostById } from "../../repositories/post.repository.js";
 import { getAllTags, getTagsByPostId } from "../../repositories/tag.repository.js";
 import { authResolvers } from "./auth.resolver.js";
-
+import { postResolvers } from "./post.resolver.js";
 
 export const resolvers = {
     Query: {
@@ -13,7 +13,8 @@ export const resolvers = {
         tags: async () => await getAllTags()
     },  
     Mutation: {
-        ...authResolvers.Mutation
+        ...authResolvers.Mutation,
+        ...postResolvers.Mutation
     },
     Post: {
         author: async (parent, _, context) => {
