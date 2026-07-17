@@ -51,3 +51,30 @@ export async function clearRefreshToken(userId) {
 }
 
 
+
+export async function findUserByGoogleId(googleId){
+    const result = await pool.query(
+        `
+        SELECT *
+        FROM users
+        WHERE google_id = $1;
+        `,
+        [googleId]
+    )
+    return result.rows[0] || null;
+}
+
+export async function createGoogleUser(username, email, googleId){
+    const result = await pool.query(
+        `
+        INSERT INTO users
+        (username, email, password, google_id)
+        VALUES ($1, $2, '', $3)
+        RETURNING *;
+        `,
+        [username, email, googleId]
+    )
+    return result.rows[0];
+
+}
+

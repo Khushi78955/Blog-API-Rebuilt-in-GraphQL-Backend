@@ -14,6 +14,11 @@ import {connectDB} from "./src/db/db.js"
 import { createUserLoader } from "./src/loaders/user.loader.js";
 import {authenticate} from "./src/middleware/auth.middleware.js"
 
+import session from "express-session";
+import passport from "./src/config/passport.js";
+
+import authRoutes from "./src/routes/auth.routes.js";
+
 const app = express();
 
 const server = new ApolloServer({
@@ -22,6 +27,18 @@ const server = new ApolloServer({
 })
 
 await server.start();
+
+
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+}))
+
+app.use(passport.initialize());
+app.use(passport.session())
+
+app.use("/auth", authRoutes);
 
 app.use("/graphql", cors(), express.json(), expressMiddleware(server, {
     context: async ({ req }) => {
