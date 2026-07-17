@@ -1,9 +1,14 @@
 import { createPost, getPostAuthor, updatePost, deletePost } from "../repositories/post.repository.js";
+import { validateTitle, validateContent} from "../utils/validation.js";
 
 export async function createNewPost(title, content, user) {
     if (!user) {
         throw new Error("Unauthorized");
     }
+
+    validateTitle(title);
+    validateContent(content);
+
     const slug = title
         .toLowerCase()
         .trim()
@@ -21,6 +26,12 @@ export async function createNewPost(title, content, user) {
 export async function updateExistingPost(postId, title, content, user){
     if(!user){
         throw new Error("Unauthorized");
+    }
+    if(title){
+        validateTitle(title);
+    }
+    if(content){
+        validateContent(content);
     }
     const authorId = await getPostAuthor(postId);
     if(authorId === null){

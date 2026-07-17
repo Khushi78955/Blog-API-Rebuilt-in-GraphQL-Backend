@@ -3,8 +3,14 @@ import jwt from "jsonwebtoken";
 
 import { findUserByEmail, createUser, updateRefreshToken, clearRefreshToken} from "../repositories/auth.repository.js"
 import { generateAccessToken, generateRefreshToken } from "../utils/token.js"
+import { validateEmail, validatePassword, validateUsername } from "../utils/validation.js";
 
 export async function register(username, email, password){
+
+    validateUsername(username);
+    validateEmail(email);
+    validatePassword(password);
+
     const existingUser = await findUserByEmail(email);
     if(existingUser){
         throw new Error("Email already exists");
@@ -37,6 +43,10 @@ export async function register(username, email, password){
 
 
 export async function login(email, password) {
+
+    validateEmail(email);
+    validatePassword(password);
+
     const user = await findUserByEmail(email);
     if(!user){
         throw new Error("Invalid email or password");
