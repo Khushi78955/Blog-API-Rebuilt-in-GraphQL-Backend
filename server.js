@@ -1,8 +1,7 @@
+import "dotenv/config";
+
 import express from "express";
 import cors from "cors"
-import dotenv from "dotenv";
-
-dotenv.config();
 
 import {ApolloServer} from "@apollo/server"
 import { expressMiddleware } from "@as-integrations/express5";
@@ -28,11 +27,14 @@ const server = new ApolloServer({
 
 await server.start();
 
-
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    cookie: {
+        secure: false,
+        httpOnly: true,
+    },
 }))
 
 app.use(passport.initialize());

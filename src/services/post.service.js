@@ -23,7 +23,6 @@ export async function createNewPost(title, content, user) {
     );
 }
 
-
 export async function updateExistingPost(postId, title, content, user){
     if(!user){
         unauthenticatedError();
@@ -41,9 +40,12 @@ export async function updateExistingPost(postId, title, content, user){
     if(authorId !== user.id){
         forbiddenError();
     }
-    return await updatePost(postId, title, content)
+    return await updatePost(
+        postId,
+        title ?? null,
+        content ?? null
+    );
 }
-
 
 export async function deleteExistingPost(postId, user){
     if(!user){

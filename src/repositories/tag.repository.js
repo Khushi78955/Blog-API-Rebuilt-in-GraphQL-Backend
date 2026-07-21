@@ -29,7 +29,6 @@ export async function getTagsByPostId(postId) {
     
 }
 
-
 export async function createTag(name) {
     const result = await pool.query(
         `

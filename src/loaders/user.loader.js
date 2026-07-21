@@ -11,7 +11,7 @@ export function createUserLoader(){
                 id: user.id,
                 username: user.username,
                 email: user.email,
-                createdAt: user.created_at
+                createdAt: user.createdAt
             })
         })
         return userIds.map((id) => userMap.get(id) || null);

@@ -3,12 +3,12 @@ VALUES
 (
     'khushi',
     'khushi@example.com',
-    '$2b$10$abcdefghijklmnopqrstuv'
+    '$2b$10$vfYJ0F9Xa9AX27/Dg5jpo.6OPZ7c8WyeUtljyVRbrVlhcKKoKJoCi'
 ),
 (
     'john',
     'john@example.com',
-    '$2b$10$abcdefghijklmnopqrstuv'
+    '$2b$10$vfYJ0F9Xa9AX27/Dg5jpo.6OPZ7c8WyeUtljyVRbrVlhcKKoKJoCi'
 );
 
 INSERT INTO posts (title, content, slug, author_id)

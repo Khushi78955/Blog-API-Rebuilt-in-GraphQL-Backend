@@ -13,8 +13,6 @@ export function generateAccessToken(user){
     )
 }
 
-
-
 export function generateRefreshToken(user){
     return jwt.sign(
         {

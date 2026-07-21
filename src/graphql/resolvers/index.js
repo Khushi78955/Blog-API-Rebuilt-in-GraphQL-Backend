@@ -1,4 +1,4 @@
-import { getAllUsers, getUserById, getUserByAuthorId } from "../../repositories/user.repository.js"
+import { getAllUsers, getUserById } from "../../repositories/user.repository.js"
 import { getAllPosts, getPostById } from "../../repositories/post.repository.js";
 import { getAllTags, getTagsByPostId } from "../../repositories/tag.repository.js";
 import { authResolvers } from "./auth.resolver.js";

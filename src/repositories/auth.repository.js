@@ -12,7 +12,6 @@ export async function findUserByEmail(email) {
     return result.rows[0] || null;
 }
 
-
 export async function createUser(username, email, password) {
     const result = await pool.query(
         `
@@ -25,7 +24,6 @@ export async function createUser(username, email, password) {
     return result.rows[0];
 }
 
-
 export async function updateRefreshToken(userId, hashedRefreshToken) {
     await pool.query(
         `
@@ -37,8 +35,6 @@ export async function updateRefreshToken(userId, hashedRefreshToken) {
     )
 }
 
-
-
 export async function clearRefreshToken(userId) {
     await pool.query(
         `
@@ -49,8 +45,6 @@ export async function clearRefreshToken(userId) {
         [userId]
     )
 }
-
-
 
 export async function findUserByGoogleId(googleId){
     const result = await pool.query(
@@ -70,6 +64,8 @@ export async function createGoogleUser(username, email, googleId){
         INSERT INTO users
         (username, email, password, google_id)
         VALUES ($1, $2, '', $3)
+        ON CONFLICT (email)
+        DO UPDATE SET google_id = EXCLUDED.google_id
         RETURNING *;
         `,
         [username, email, googleId]
@@ -77,8 +73,6 @@ export async function createGoogleUser(username, email, googleId){
     return result.rows[0];
 
 }
-
-
 
 export async function findUserByGitHubId(githubId) {
     const result = await pool.query(
@@ -99,6 +93,8 @@ export async function createGitHubUser(username, email, githubId) {
         INSERT INTO users
         (username, email, password, github_id)
         VALUES ($1, $2, '', $3)
+        ON CONFLICT (email)
+        DO UPDATE SET github_id = EXCLUDED.github_id
         RETURNING *;
         `,
         [username, email, githubId]

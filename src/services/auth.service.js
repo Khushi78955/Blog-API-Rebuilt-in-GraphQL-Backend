@@ -19,6 +19,10 @@ export async function register(username, email, password){
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await createUser(username, email, hashedPassword);
+    if(!user){
+        notFoundError("User not found");
+    }
+    
     const accessToken = generateAccessToken(user);
     const refreshToken = generateRefreshToken(user);
 
@@ -35,13 +39,10 @@ export async function register(username, email, password){
             id: user.id,
             username: user.username,
             email: user.email,
-            createdAt: user.created_at
+            createdAt: user.created_at ? user.created_at.toISOString() : null
         }
     }
 }
-
-
-
 
 export async function login(email, password) {
 
@@ -52,7 +53,9 @@ export async function login(email, password) {
     if(!user){
         unauthenticatedError("Invalid email or password");
     }
-    
+    if (!user.password) {
+        unauthenticatedError("Please login using OAuth");
+    }
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if(!isPasswordCorrect){
         unauthenticatedError("Invalid email or password");
@@ -70,13 +73,10 @@ export async function login(email, password) {
             id: user.id,
             username: user.username,
             email: user.email,
-            createdAt: user.created_at
+            createdAt: user.created_at ? user.created_at.toISOString() : null
         }
     }
 }
-
-
-
 
 export async function refresh(refreshToken){
     let payload;
@@ -89,6 +89,9 @@ export async function refresh(refreshToken){
     const user = await findUserByEmail(payload.email);
     if(!user){
         notFoundError("User not found");
+    }
+    if (!user.hashed_refresh_token) {
+        unauthenticatedError("Invalid refresh token");
     }
 
     const isValidRefreshToken = await bcrypt.compare(refreshToken, user.hashed_refresh_token);
@@ -108,12 +111,10 @@ export async function refresh(refreshToken){
             id: user.id,
             username: user.username,
             email: user.email,
-            createdAt: user.created_at,
+            createdAt: user.created_at ? user.created_at.toISOString() : null,
         },
     };
 }
-
-
 
 export async function logout(refreshToken){
     let payload;
@@ -126,6 +127,9 @@ export async function logout(refreshToken){
     const user = await findUserByEmail(payload.email);
     if(!user){
         notFoundError("User not found");
+    }
+    if (!user.hashed_refresh_token) {
+        unauthenticatedError("Invalid refresh token");
     }
 
     const isValidRefreshToken = await bcrypt.compare(refreshToken, user.hashed_refresh_token);

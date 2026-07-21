@@ -72,5 +72,10 @@ export async function getUsersByIds(ids) {
         `,
         [ids]
     );
-    return result.rows;
+    return result.rows.map(user => ({
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        createdAt: user.created_at
+    }));
 }

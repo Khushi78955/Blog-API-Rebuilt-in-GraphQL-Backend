@@ -19,7 +19,6 @@ export async function getAllPosts(){
     }))
 }
 
-
 export async function getPostById(id){
     const result = await pool.query(
         `
@@ -45,7 +44,6 @@ export async function getPostById(id){
     }
 }
 
-
 export async function createPost(title, content, slug, authorId){
     const result = await pool.query(
         `
@@ -68,7 +66,6 @@ export async function createPost(title, content, slug, authorId){
     }
 }
 
-
 export async function getPostAuthor(postId) {
     const result = await pool.query(
         `
@@ -85,15 +82,13 @@ export async function getPostAuthor(postId) {
     return result.rows[0].author_id;
 }
 
-
-
 export async function updatePost(postId, title, content){
     const result = await pool.query(
         `
         UPDATE posts
         SET
-            title = $1,
-            content = $2,
+            title = COALESCE($1, title),
+            content = COALESCE($2, content),
             updated_at = CURRENT_TIMESTAMP
         WHERE id = $3
         RETURNING *;
@@ -112,8 +107,6 @@ export async function updatePost(postId, title, content){
         authorId: post.author_id,
     };
 }
-
-
 
 export async function deletePost(postId){
     await pool.query(
